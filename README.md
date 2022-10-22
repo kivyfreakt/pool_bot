@@ -42,16 +42,16 @@ token_api = 'your token'
 python main.py
 ```
 
-<!-- ## Развертывание приложения
+## Развертывание приложения
 
 Сборка образа: 
 
 ``` bash
-	docker build .
+	docker build -t pool_bot .
 ```
 
 Запуск контейнера: 
 
 ``` bash
-	docker run
-``` -->
+	docker run -d --name bot pool_bot
+```
