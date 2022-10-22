@@ -30,6 +30,10 @@ token_api = 'your token'
 
 ```
 
+Свои вопросы нужно указать в файле [questions.py](survey/questions.py)
+
+Так же можно изменить стандартные ответы бота в фале [texts.py](survey/texts.py)
+
 ## Запуск
 
 Запустить скрипт:
