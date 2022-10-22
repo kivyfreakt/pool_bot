@@ -1,5 +1,7 @@
+""" Главный файл для бота """
+
 import telebot
-from config import token_api  # todo: fix
+from config import TOKEN_API
 from survey.questions import QUESTIONS
 from survey.texts import INTRO_TEXT, OUTRO_TEXT, START, RESTART
 from models.user import Users
@@ -8,8 +10,9 @@ from load import database
 
 QUESTIONS_NUM = len(QUESTIONS)
 
-# todo: move
+
 def markup_choices(choices):
+    """ Создание клавиатуры с ответами """
     if not choices:
         return telebot.types.ReplyKeyboardRemove(selective=False)
 
@@ -21,20 +24,16 @@ def markup_choices(choices):
 
 
 def main():
-    ''' 
-        Главная функция
-    '''
+    """ Главная функция """
 
-    bot = telebot.TeleBot(token_api, num_threads=5)
+    bot = telebot.TeleBot(TOKEN_API, num_threads=5)
     database.connect()
     Users.create_table()
     Responses.create_table()
 
     @bot.message_handler(content_types=['text'])
     def message_handler(message):
-        '''
-            Обработчик текста
-        '''
+        """ Обработчик текста """
         user, _ = Users.get_or_create(
             user_id=message.from_user.id,
             defaults={
@@ -47,10 +46,10 @@ def main():
         response = user.responses.filter(completed=False)
 
         if response:
-            response = response[0] # ????
+            response = response[0]  # ????
 
         if not response or message.text in [START, RESTART]:
-            response = Responses(details = {}, user = user)
+            response = Responses(details={}, user=user)
 
         if QUESTIONS_NUM >= response.step >= 1:
             prev_question = QUESTIONS[response.step - 1]["text"]
@@ -62,7 +61,7 @@ def main():
             response.save()
 
             bot.send_message(user.user_id, OUTRO_TEXT,
-                            reply_markup=markup_choices([RESTART]))
+                             reply_markup=markup_choices([RESTART]))
             return
 
         question = QUESTIONS[response.step]
@@ -70,26 +69,21 @@ def main():
         choices = question.get("choices") or []
 
         bot.send_message(user.user_id, text,
-                        reply_markup=markup_choices(choices))
+                         reply_markup=markup_choices(choices))
 
         response.step += 1
         response.save()
 
-
     @bot.message_handler(commands=['start'])
     def send_welcome(message):
-        ''' 
-            Приветственная функция
-        '''
+        """ Приветственная функция """
 
-        welcome_user = f'Здравствуйте {message.from_user.first_name} {message.from_user.last_name}' + INTRO_TEXT
+        welcome_user = "Здравствуйте" + message.from_user.first_name + \
+            " " + message.from_user.last_name + INTRO_TEXT
         bot.send_message(message.chat.id, welcome_user)
 
 
-    try:
-        bot.infinity_polling()
-    except Exception as e:
-        print(e)
+    bot.infinity_polling()
 
 
 if __name__ == '__main__':
