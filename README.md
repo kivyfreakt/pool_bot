@@ -26,7 +26,7 @@ pip install -r requirements
 
 ```
 
-token_api = 'your token'
+TOKEN_API = 'your token'
 
 ```
 
@@ -47,11 +47,11 @@ python main.py
 Сборка образа: 
 
 ``` bash
-	docker build -t pool_bot .
+docker build -t pool_bot .
 ```
 
 Запуск контейнера: 
 
 ``` bash
-	docker run -d --name bot pool_bot
+docker run -d --name bot pool_bot
 ```
