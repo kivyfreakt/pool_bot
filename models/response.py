@@ -12,7 +12,7 @@ class JSONField(TextField):
 
     def db_value(self, value):
         """Convert the python value for storage in the database."""
-        return value if value is None else json.dumps(value)
+        return value if value is None else json.dumps(value, ensure_ascii=False)
 
     def python_value(self, value):
         """Convert the database value to a pythonic value."""
