@@ -1,11 +1,12 @@
 """ Главный файл для бота """
 
 import telebot
+import pandas as pd
 from config import TOKEN_API, ADMIN
-from survey.questions import QUESTIONS
-from survey.texts import INTRO_TEXT, OUTRO_TEXT, START, RESTART, HELP
+from survey.questions import QUESTIONS, QUESTIONS_NUM
+from survey.texts import INTRO_TEXT, OUTRO_TEXT, START, RESTART, HELP, STATS
 from models.user import Users
-from models.response import Responses
+from models.response import Responses, get_answers
 from load import database
 
 QUESTIONS_NUM = len(QUESTIONS)
@@ -44,7 +45,27 @@ def main():
     def send_stats(message):
         """ Функция получения статистики """
         if message.from_user.id == ADMIN:
-            bot.send_message(message.chat.id, "Hello, admin!")
+            data = get_answers()
+
+            dataframe = pd.DataFrame.from_dict(data)
+            dataframe.to_csv("report.csv", index=False)
+
+            dataframe2 = dataframe.apply(pd.value_counts)
+
+            pie = dataframe2.plot(kind='pie', subplots=True,
+                                  autopct=lambda p: '{:.1f}%'.format(
+                                      round(p)) if p > 0 else '',
+                                  startangle=90, layout=(1, QUESTIONS_NUM), 
+                                  figsize=(5*QUESTIONS_NUM, 5))
+
+            fig = pie[0][0].get_figure()
+            fig.savefig("plot.png")
+
+            bot.send_document(message.chat.id, STATS)
+            with open('plot.png', 'rb') as plot:
+                bot.send_document(message.chat.id, plot)
+            with open('report.csv', 'rb') as doc:
+                bot.send_document(message.chat.id, doc)
 
     @bot.message_handler(commands=['help'])
     def send_help(message):
@@ -76,8 +97,7 @@ def main():
 
         if QUESTIONS_NUM - 1 >= response.step >= 0:
             if message.text in QUESTIONS[response.step]["choices"]:
-                prev_question = QUESTIONS[response.step]["text"]
-                response.details[prev_question] = message.text
+                response.details[response.step] = message.text
                 response.step += 1
                 response.save()
 
@@ -96,7 +116,6 @@ def main():
         bot.send_message(user.user_id, text,
                          reply_markup=markup_choices(choices))
 
-        # response.step += 1
         response.save()
 
     bot.infinity_polling()

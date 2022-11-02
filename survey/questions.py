@@ -51,3 +51,5 @@ QUESTIONS = [
         "choices": ["Да", "Нет"]
     },
 ]
+
+QUESTIONS_NUM = len(QUESTIONS)

@@ -31,3 +31,13 @@ class Responses(BaseModel):
     class Meta:
         """ Класс для конфигурции модели """
         db_table = "responses"
+
+
+def get_answers():
+    result = []
+    answers = Responses.select(Responses.details)
+
+    for answer in answers:
+        result.append(answer.details)
+
+    return result
