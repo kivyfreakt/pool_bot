@@ -20,13 +20,14 @@ pip install -r requirements
 
 Конфигурационный файл - [сonfig.py](config.py)
 
-В файле необходимо задать aсcess token, полученный от bot father
+В файле необходимо задать aсcess token, полученный от bot father и идентификатор администратора
 
 Файл [сonfig.py](config.py) должен выглядить так:
 
 ```
 
 TOKEN_API = 'your token'
+ADMIN = 00000000
 
 ```
 

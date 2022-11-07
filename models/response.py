@@ -34,6 +34,7 @@ class Responses(BaseModel):
 
 
 def get_answers():
+    """ Получение всех ответов из базы """
     result = []
     answers = Responses.select(Responses.details)
 
