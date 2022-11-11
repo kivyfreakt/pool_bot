@@ -32,8 +32,8 @@ Responses.create_table()
 def send_welcome(message):
     """ Приветственная функция """
 
-    welcome_user = "Здравствуйте " + message.from_user.first_name + \
-        " " + message.from_user.last_name + INTRO_TEXT
+    welcome_user = "Здравствуйте " + str(message.from_user.first_name) + \
+        " " + str(message.from_user.last_name) + INTRO_TEXT
     bot.send_message(message.chat.id, welcome_user,
                         reply_markup=markup_choices([START]))
 
