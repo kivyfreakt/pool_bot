@@ -1,28 +1,28 @@
 # pool_bot
 
-Телеграм бот для проведения опроса и составления портрета аудитории.
+Telegram bot for conducting a survey and compiling a portrait of the audience.
 
 ---
 
-## Зависимости
+## Dependencies
 
-Для приложения необходима библиотека **telebot** и другие
+The application requires the **telebot** library and others
 
-Полный список зависимостей находится в файле [requirements.txt](requirements.txt).
+A complete list of dependencies can be found in the [requirements.txt](requirements.txt) file.
 
-Установка всех зависимостей: 
+Installing all dependencies: 
 
 ``` bash
 pip install -r requirements
 ```
 
-## Настройка
+## Setting up
 
-Конфигурационный файл - [сonfig.py](config.py)
+The configuration file is [config.py](config.py)
 
-В файле необходимо задать aсcess token, полученный от bot father и идентификатор администратора
+In the file you must specify the access token received from the bot father and the ID of the administrator
 
-Файл [сonfig.py](config.py) должен выглядить так:
+The [config.py](config.py) file should look like this:
 
 ```
 
@@ -31,27 +31,27 @@ ADMIN = 00000000
 
 ```
 
-Свои вопросы нужно указать в файле [questions.py](survey/questions.py)
+You need to specify your questions in the file [questions.py](survey/questions.py)
 
-Так же можно изменить стандартные ответы бота в фале [texts.py](survey/texts.py)
+You can also change the bot's default responses in the [texts.py] file (survey/texts.py)
 
-## Запуск
+## Starting the application
 
-Запустить скрипт:
+Run the script:
 
 ``` bash
 python main.py
 ```
 
-## Развертывание приложения
+## Deploying the application
 
-Сборка образа: 
+Build a docker image: 
 
 ``` bash
 docker build -t pool_bot .
 ```
 
-Запуск контейнера: 
+Running the docker container:
 
 ``` bash
 docker run -d --name bot pool_bot
